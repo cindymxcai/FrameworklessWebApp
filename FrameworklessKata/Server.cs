@@ -3,7 +3,7 @@ using System.Net;
 
 namespace FrameworklessKata
 {
-    public class Server
+    public static class Server
     {
         private const int Port = 8080;
 
@@ -11,14 +11,18 @@ namespace FrameworklessKata
 
         public static void Start()
         {
-            Listener.Prefixes.Add($"http://localhost:{Port}/"); //URI prefixes 
+            var dataRetriever = new DataRetriever();
+            var tasks = new Tasks(dataRetriever);
+            var request = new Request(tasks);
+
+            Listener.Prefixes.Add($"http://localhost:{Port}/"); 
             Listener.Start();
             Console.WriteLine("Starting Server... listening for requests");
             while (true)
             {
                 var context = Listener.GetContext();
                 Console.WriteLine($"{context.Request.HttpMethod} {context.Request.Url}");
-                Request.Process(context);
+                request.Process(context);
             }
 
            // Listener.Stop(); // never reached...
