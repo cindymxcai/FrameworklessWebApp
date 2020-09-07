@@ -58,13 +58,32 @@ namespace FrameworklessKata
                             Response.Write($"Tasks:\n {JsonConvert.SerializeObject(_tasks.Get())}", context);
                             break;
                         case HttpMethod.Delete:
+                            Console.WriteLine("deleting tasks");
+                            context.Response.StatusCode = (int) HttpStatusCode.OK;
+                            _tasks.DeleteAll();
+                            Response.Write($"Tasks:\n {JsonConvert.SerializeObject(_tasks.Get())}", context);
+                            break;
+                    }
+                    break;
+                case "/task":
+                {
+                    switch (ConvertHttpMethodToEnum(context.Request.HttpMethod))
+                    {
+                        case HttpMethod.Get:
+                            Console.WriteLine("getting task");
+                            context.Response.StatusCode = (int) HttpStatusCode.OK;
+                            Response.Write($"Task:\n {JsonConvert.SerializeObject(_tasks.GetTask(context))}", context);
+                            break;
+                        case HttpMethod.Delete:
                             Console.WriteLine("deleting task");
                             context.Response.StatusCode = (int) HttpStatusCode.OK;
                             _tasks.Delete(context);
                             Response.Write($"Tasks:\n {JsonConvert.SerializeObject(_tasks.Get())}", context);
                             break;
                     }
+                        
                     break;
+                }
                 default:
                     context.Response.StatusCode = (int) HttpStatusCode.NotFound;
                     Response.Write("404", context);   

@@ -35,10 +35,10 @@ namespace FrameworklessKata
 
         }
         
-        public void DeleteTask(Task task)
+        public void DeleteTask(int taskId)
         {
             var allTasks = GetAllTasks();
-            allTasks.Remove(allTasks.First(t => t.Id == task.Id));
+            allTasks.Remove(allTasks.First(t => t.Id == taskId));
             CreateNewJArray(allTasks);
         }
 
@@ -51,6 +51,19 @@ namespace FrameworklessKata
             
             streamWriter.Close();
             
+        }
+
+        public Task GetTask( int taskId)
+        {
+            var allTasks = GetAllTasks();
+            return allTasks.First(t => t.Id == taskId);
+        }
+
+        public void DeleteAllTasks()
+        {
+            var allTasks = GetAllTasks();
+            allTasks.Clear();
+            CreateNewJArray(allTasks);
         }
     }
 }
