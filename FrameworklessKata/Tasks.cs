@@ -36,7 +36,6 @@ namespace FrameworklessKata
         public void Put(HttpListenerContext context)
         {
             var task = GetTask(context);
-
             _dataRetriever.UpdateTask(task);
         }
 

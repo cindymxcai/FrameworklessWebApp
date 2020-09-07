@@ -38,26 +38,26 @@ namespace FrameworklessKata
                     Response.Write("Index",context);
                     break;
                 case "/tasks":
-                    switch (context.Request.HttpMethod)
+                    switch (ConvertHttpMethodToEnum(context.Request.HttpMethod))
                     {
-                        case "GET":
+                        case HttpMethod.Get:
                             Console.WriteLine("getting tasks");
                             context.Response.StatusCode = (int) HttpStatusCode.OK;
                             Response.Write($"Tasks:\n {JsonConvert.SerializeObject(_tasks.Get())}", context);
                             break;
-                        case "POST":
+                        case HttpMethod.Post:
                             Console.WriteLine("posting to tasks");
                             context.Response.StatusCode = (int) HttpStatusCode.Created;
                             _tasks.Post(context);
                             Response.Write($"Tasks:\n {JsonConvert.SerializeObject(_tasks.Get())}", context);
                             break;
-                        case "PUT":
+                        case HttpMethod.Put:
                             Console.WriteLine("updating task");
                             context.Response.StatusCode = (int) HttpStatusCode.OK;
                             _tasks.Put(context);
                             Response.Write($"Tasks:\n {JsonConvert.SerializeObject(_tasks.Get())}", context);
                             break;
-                        case "DELETE":
+                        case HttpMethod.Delete:
                             Console.WriteLine("deleting task");
                             context.Response.StatusCode = (int) HttpStatusCode.OK;
                             _tasks.Delete(context);
@@ -70,6 +70,15 @@ namespace FrameworklessKata
                     Response.Write("404", context);   
                     break;
             }
+        }
+
+        private HttpMethod ConvertHttpMethodToEnum(string requestHttpMethod)
+        {
+            if (Enum.TryParse(requestHttpMethod, true,  out HttpMethod method))
+            {
+                return method;
+            }
+            throw new Exception("Invalid method");
         }
     }
 }
